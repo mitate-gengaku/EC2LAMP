@@ -1,10 +1,7 @@
 name: "AWS Destroy"
 
 on:
-  pull_request: 
-    branches: 
-      - main
-    types: closed
+  workflow_dispatch
 
 env:
   AWS_REGION : "ap-northeast-1"
