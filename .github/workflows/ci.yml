@@ -1,0 +1,94 @@
+name: "Lint"
+
+on:
+  pull_request: 
+    branches: 
+      - main
+    types: 
+      - "opened"
+      - "synchronize"
+      - "reopened"
+
+env:
+  AWS_REGION : "ap-northeast-1"
+  AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+  TFSTATE_BUCKET: ${{ secrets.TFSTATE_BUCKET }}
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: "./terraform/prod"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "^1.3.7"
+            # terraform_wrapper: false
+
+      - name: Terraform format
+        id: fmt
+        run: terraform fmt -recursive -check -diff
+        continue-on-error: true
+
+      - name: Terraform init
+        id: init
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ env.TFSTATE_BUCKET }}" \
+            -backend-config="key=state/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION  }}" \
+            -backend-config="encrypt=true"
+
+      - name: Terraform validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - name: Preview plan result
+        uses: actions/github-script@v6
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          script: |
+
+            const output = `### Terraformの各結果
+            #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization \`${{ steps.init.outcome }}\`
+            #### Terraform Plan \`${{ steps.plan.outcome }}\`
+            #### Terraform Validation \`${{ steps.validate.outcome }}\`
+
+            <details><summary>Terraform Plan</summary>
+
+            \`\`\`${process.env.PLAN}\`\`\`
+
+            </details>`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
