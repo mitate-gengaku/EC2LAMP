@@ -1,0 +1,4 @@
+- name: Apacheを再起動
+  service:
+    name: apache2
+    state: restarted

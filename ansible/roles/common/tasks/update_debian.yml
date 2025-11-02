@@ -1,0 +1,5 @@
+- name: パッケージのアップデート (Ubuntu 22.04 LTS)
+  apt:
+    update_cache: true
+  when:
+    - ansible_distribution_major_version == "22"

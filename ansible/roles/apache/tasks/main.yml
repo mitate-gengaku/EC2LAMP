@@ -1,0 +1,14 @@
+- name: 変数の読み込み
+  import_tasks:
+    file: "import_vars.yml"
+
+- name: パッケージのインストール
+  import_tasks:
+    file: "install_packages.yml"
+
+- name: Apacheを有効化し起動
+  systemd:
+    name: apache2
+    enabled: yes
+    daemon_reload: yes
+    state: started

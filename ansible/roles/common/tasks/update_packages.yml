@@ -1,0 +1,9 @@
+#############################################
+## Ubuntu
+#############################################
+
+- name: パッケージのアップデート
+  import_tasks:
+      file: "update_debian.yml"
+  when:
+    - ansible_distribution in ["Ubuntu"]

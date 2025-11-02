@@ -1,0 +1,35 @@
+- name: 変数の読み込み
+  import_tasks:
+    file: "import_vars.yml"
+
+- name: パッケージのインストール
+  import_tasks:
+    file: "install_packages.yml"
+
+- name: データベースを作成
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_name }}"
+    state: present
+    encoding: utf8mb4
+    collation: utf8mb4_general_ci
+
+- name: データベースユーザーを作成
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: localhost
+    priv: "{{ db_name }}.*:ALL"
+    state: present
+
+- name: MariaDBを有効化し起動
+  systemd:
+    name: mariadb
+    enabled: yes
+    daemon_reload: yes
+    state: started

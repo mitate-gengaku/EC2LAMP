@@ -1,0 +1,6 @@
+- name: 変数の読み込み (Ubuntu 22.04 LTS)
+  include_vars:
+    file: "debian_vars.yml"
+  when:
+    - ansible_distribution in ["Ubuntu"]
+    - ansible_distribution_major_version == "22"

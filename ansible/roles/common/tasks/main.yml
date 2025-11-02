@@ -1,0 +1,3 @@
+- name: パッケージのアップデート
+  import_tasks:
+    file: "update_packages.yml"    

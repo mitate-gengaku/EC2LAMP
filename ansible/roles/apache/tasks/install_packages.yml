@@ -1,0 +1,9 @@
+#############################################
+## Ubuntu
+#############################################
+
+- name: Apacheのインストール
+  import_tasks:
+    file: "install_debian.yml"
+  when:
+    - ansible_distribution in ["Ubuntu"]

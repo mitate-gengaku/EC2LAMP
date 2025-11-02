@@ -1,0 +1,8 @@
+- name: 変数の読み込み
+  import_tasks:
+    file: "import_vars.yml"
+  
+- name: パッケージのインストール
+  import_tasks:
+    file: "install_packages.yml"
+

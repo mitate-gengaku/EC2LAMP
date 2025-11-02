@@ -1,0 +1,7 @@
+mariadb_packages:
+  - python3-pymysql
+  - mariadb-server
+db_name: "wp_database"
+db_user: "wp_user"
+db_password: "wp_password"
+wp_config_path: "/tmp/wordpress/wp-config.php"

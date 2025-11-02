@@ -1,0 +1,84 @@
+- name: WordPressをダウンロードする
+  get_url:
+    url: "https://wordpress.org/latest.tar.gz"
+    dest: "/tmp/wordpress.tar.gz"
+    mode: "0755"
+
+- name: WordPressを解凍する
+  unarchive: 
+    src: "/tmp/wordpress.tar.gz"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: 設定ファイルのコピー
+  copy:
+    src: /tmp/wordpress/wp-config-sample.php
+    dest: "{{ wp_config_path }}"
+    remote_src: true
+    force: no
+
+- name: DB_NAMEを更新
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\(\\s*'DB_NAME'"
+    line: "define( 'DB_NAME', '{{ db_name }}' );"
+
+- name: DB_USERを更新
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\(\\s*'DB_USER'"
+    line: "define( 'DB_USER', '{{ db_user }}' );"
+
+- name: DB_PASSWORDを更新
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\(\\s*'DB_PASSWORD'"
+    line: "define( 'DB_PASSWORD', '{{ db_password }}' );"
+
+- name: DB_HOSTを更新
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\(\\s*'DB_HOST'"
+    line: "define( 'DB_HOST', 'localhost' );"
+
+- name: index.htmlの削除
+  file:
+    path: "/var/www/html/index.html"
+    state: absent
+
+- name: ドキュメントルートにコピー
+  copy:
+    src: "/tmp/wordpress/"
+    dest: "/var/www/html"
+    remote_src: true
+    owner: www-data
+    group: www-data
+    mode: preserve
+    force: no
+
+- name: /var/wwwの所有権を変更
+  file:
+    path: "/var/www"
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: ディレクトリにSGIDとパーミッションを設定
+  file:
+    path: /var/www
+    state: directory
+    mode: '2775'
+
+- name: すべてのサブディレクトリのパーミッションを設定
+  shell: find /var/www -type d ! -perm 2775 -exec chmod 2775 {} +;
+
+- name: すべてのファイルのパーミッションを設定
+  shell: find /var/www -type f ! -perm 0644 -exec chmod 0644 {} +;
+
+- name: AllowOverride を All に変更
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    regexp: '^\s*AllowOverride\s+None'
+    line: '    AllowOverride All'
+    backup: yes
+  notify: Apacheを再起動

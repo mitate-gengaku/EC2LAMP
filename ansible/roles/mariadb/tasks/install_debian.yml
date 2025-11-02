@@ -1,0 +1,6 @@
+- name: MariaDBと必要なパッケージのインストール (Ubuntu 22.04 LTS)
+  apt:
+    name: "{{ mariadb_packages }}"
+    state: present
+  when:
+    - ansible_distribution_major_version == "22"

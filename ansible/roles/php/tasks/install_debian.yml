@@ -1,0 +1,6 @@
+- name: PHPのインストール (Ubuntu 22.04 LTS)
+  apt:
+    name: "{{ php_packages }}"
+    state: present
+  when:
+    - ansible_distribution_major_version == "22"

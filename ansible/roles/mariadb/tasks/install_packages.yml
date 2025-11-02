@@ -1,0 +1,9 @@
+#############################################
+## Ubuntu
+#############################################
+
+- name: MariaDBと必要なパッケージのインストール
+  import_tasks:
+    file: "install_debian.yml"
+  when:
+    - ansible_distribution in ["Ubuntu"]
