@@ -2,18 +2,18 @@
 ## Ubuntu
 #############################################
 
-- name: PHPのインストール
+- name: Apacheを有効化し起動
   import_tasks:
-    file: "install_debian.yml"
+    file: "start_debian.yml"
   when:
     - ansible_distribution in ["Ubuntu"]
 
 #############################################
-## Amazon Linux
+## Amazon
 #############################################
 
-- name: PHPのインストール
+- name: Apacheを有効化し起動
   import_tasks:
-    file: "install_amazon.yml"
+    file: "start_amazon.yml"
   when:
     - ansible_distribution in ["Amazon"]

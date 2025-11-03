@@ -7,3 +7,13 @@
     file: "install_debian.yml"
   when:
     - ansible_distribution in ["Ubuntu"]
+
+#############################################
+## Amazon Linux
+#############################################
+
+- name: Apacheのインストール
+  import_tasks:
+    file: "install_amazon.yml"
+  when:
+    - ansible_distribution in ["Amazon"]

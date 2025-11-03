@@ -1,0 +1,5 @@
+- name: パッケージのアップデート (Amazon Linux 2023)
+  dnf:
+    update_cache: true
+  when:
+    - ansible_distribution_major_version == "2023"

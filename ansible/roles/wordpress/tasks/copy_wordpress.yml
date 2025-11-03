@@ -2,9 +2,9 @@
 ## Ubuntu
 #############################################
 
-- name: PHPのインストール
+- name: WordPressフォルダーのコピー
   import_tasks:
-    file: "install_debian.yml"
+    file: "copy_debian.yml"
   when:
     - ansible_distribution in ["Ubuntu"]
 
@@ -12,8 +12,8 @@
 ## Amazon Linux
 #############################################
 
-- name: PHPのインストール
+- name: WordPressフォルダーのコピー
   import_tasks:
-    file: "install_amazon.yml"
+    file: "copy_amazon.yml"
   when:
     - ansible_distribution in ["Amazon"]

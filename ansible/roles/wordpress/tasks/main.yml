@@ -47,21 +47,8 @@
     state: absent
 
 - name: ドキュメントルートにコピー
-  copy:
-    src: "/tmp/wordpress/"
-    dest: "/var/www/html"
-    remote_src: true
-    owner: www-data
-    group: www-data
-    mode: preserve
-    force: no
-
-- name: /var/wwwの所有権を変更
-  file:
-    path: "/var/www"
-    owner: www-data
-    group: www-data
-    recurse: yes
+  import_tasks:
+    file: copy_wordpress.yml
 
 - name: ディレクトリにSGIDとパーミッションを設定
   file:
@@ -75,10 +62,6 @@
 - name: すべてのファイルのパーミッションを設定
   shell: find /var/www -type f ! -perm 0644 -exec chmod 0644 {} +;
 
-- name: AllowOverride を All に変更
-  lineinfile:
-    path: /etc/apache2/apache2.conf
-    regexp: '^\s*AllowOverride\s+None'
-    line: '    AllowOverride All'
-    backup: yes
-  notify: Apacheを再起動
+- name: AllowOverrideをAllに変更
+  import_tasks:
+    file: "edit_httpd.yml"

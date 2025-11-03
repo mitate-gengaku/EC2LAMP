@@ -7,3 +7,13 @@
       file: "update_debian.yml"
   when:
     - ansible_distribution in ["Ubuntu"]
+
+#############################################
+## Amazon Linux 2023
+#############################################
+
+- name: パッケージのアップデート
+  import_tasks:
+      file: "update_amazon.yml"
+  when:
+    - ansible_distribution in ["Amazon"]

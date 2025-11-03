@@ -1,0 +1,21 @@
+
+- name: ドキュメントルートにコピー (Amazon Linux 2023)
+  copy:
+    src: "/tmp/wordpress/"
+    dest: "/var/www/html"
+    remote_src: true
+    owner: www-data
+    group: www-data
+    mode: preserve
+    force: yes
+  when:
+    - ansible_distribution_major_version == "22"
+
+- name: /var/wwwの所有権を変更 (Amazon Linux 2023)
+  file:
+    path: "/var/www"
+    owner: www-data
+    group: www-data
+    recurse: yes
+  when:
+    - ansible_distribution_major_version == "2023"

@@ -1,0 +1,24 @@
+- name: データベースを作成 (Amazon Linux 2023)
+  mysql_db:
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_name }}"
+    state: present
+    encoding: utf8mb4
+    collation: utf8mb4_general_ci
+  when:
+    - ansible_distribution_major_version == "2023"
+
+- name: データベースユーザーを作成 (Amazon Linux 2023)
+  mysql_user:
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: localhost
+    priv: "{{ db_name }}.*:ALL"
+    state: present
+  when:
+    - ansible_distribution_major_version == "2023"
