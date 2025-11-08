@@ -94,3 +94,4 @@ jobs:
 
       - name: ansibleの実行
         run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/key.pem -u ${{ secrets.REMOTE_USER }}
+
