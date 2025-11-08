@@ -17,6 +17,40 @@
     remote_src: true
     force: no
 
+- name: WordPress APIからソルト群を取得
+  uri:
+    url: https://api.wordpress.org/secret-key/1.1/salt/
+    return_content: yes
+  register: wp_api_salt
+
+- name: wp-config.phpのAUTH_KEYからLOGGED_IN_SALTまでを削除
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\( '{{ item }}',"
+    state: absent
+  loop:
+    - AUTH_KEY
+    - SECURE_AUTH_KEY
+    - LOGGED_IN_KEY
+    - NONCE_KEY
+    - AUTH_SALT
+    - SECURE_AUTH_SALT
+    - LOGGED_IN_SALT
+
+- name: NONCE_SALTの直前に新しいソルト群を挿入
+  blockinfile:
+    path: "{{ wp_config_path }}"
+    insertbefore: "^define\\(\\s*'NONCE_SALT'"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: "{{ wp_api_salt.content }}"
+  no_log: true
+
+- name: 初期値のNONCE_SALTを削除する
+  lineinfile:
+    path: "{{ wp_config_path }}"
+    regexp: "^define\\(\\s*'NONCE_SALT'\\s*,\\s*'put your unique phrase here'\\s*\\)\\s*;"
+    state: absent
+
 - name: DB_NAMEを更新
   lineinfile:
     path: "{{ wp_config_path }}"
