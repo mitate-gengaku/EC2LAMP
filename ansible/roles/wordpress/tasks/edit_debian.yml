@@ -1,0 +1,8 @@
+- name: AllowOverrideをAllに変更 (Ubuntu 22.04 LTS)
+  lineinfile:
+    path: /etc/apache2/apache2.conf
+    regexp: '^\s*AllowOverride\s+None'
+    line: '    AllowOverride All'
+    backup: yes
+  notify: Apacheを再起動
+  

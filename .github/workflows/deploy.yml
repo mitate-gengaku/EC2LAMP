@@ -60,3 +60,36 @@ jobs:
       - name: Terraform apply
         id: apply
         run: terraform apply -auto-approve
+
+      - name: Get Terraform Outputs
+        id: output
+        run: |
+          echo "public_dns=$(terraform output -raw ec2_public_dns)" >> $GITHUB_OUTPUT
+          echo "public_ip=$(terraform output -raw ec2_public_ip)" >> $GITHUB_OUTPUT
+
+  ansible:
+    needs: deploy
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "./ansible"
+    steps:
+      - name: インベントリファイルの作成
+        run:  |
+          sed -i "s/ansible_host=/ansible_host=${{ needs.deploy.outputs.ec2_dns }}/" inventories/prod/inventory.ini
+
+      - name: SSHキーの作成
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/key.pem
+          chmod 600 ~ /.ssh/key.pem
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          echo "Host *\n IdentityFile ~/.ssh/key.pem" > ~/.ssh/config
+
+      - name: ansibleのインストール
+        run: |
+          sudo apt install -y ansible
+
+      - name: ansibleの実行
+        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key ~/.ssh/key.pem -u ${{ secrets.REMOTE_USER }}

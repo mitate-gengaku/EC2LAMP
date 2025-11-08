@@ -1,0 +1,5 @@
+mariadb_packages:
+  - python3-pip
+  - mariadb105-server
+python_packages:
+  - pymysql

@@ -1,0 +1,20 @@
+- name: ドキュメントルートにコピー
+  copy:
+    src: "/tmp/wordpress/"
+    dest: "/var/www/html"
+    remote_src: true
+    owner: apache
+    group: apache
+    mode: preserve
+    force: yes
+  when:
+    - ansible_distribution_major_version == "2023"
+
+- name: /var/wwwの所有権を変更
+  file:
+    path: "/var/www"
+    owner: apache
+    group: apache
+    recurse: yes
+  when:
+    - ansible_distribution_major_version == "2023"

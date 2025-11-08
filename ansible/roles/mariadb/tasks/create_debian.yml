@@ -1,0 +1,24 @@
+- name: データベースを作成 (Ubuntu 22.04 LTS)
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_name }}"
+    state: present
+    encoding: utf8mb4
+    collation: utf8mb4_general_ci
+  when:
+    - ansible_distribution_major_version == "22"
+
+- name: データベースユーザーを作成 (Ubuntu 22.04 LTS)
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_user: root
+    login_password: ""
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: localhost
+    priv: "{{ db_name }}.*:ALL"
+    state: present
+  when:
+    - ansible_distribution_major_version == "22"

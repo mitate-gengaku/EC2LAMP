@@ -1,0 +1,7 @@
+- name: AllowOverrideをAllに変更 (Amazon Linux 2023)
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: '^\s*AllowOverride\s+None'
+    line: '    AllowOverride All'
+    backup: yes
+  notify: Apacheを再起動

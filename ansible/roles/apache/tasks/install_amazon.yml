@@ -1,0 +1,6 @@
+- name: Apacheのインストール (Amazon Linux 2023)
+  dnf:
+    name: "{{ apache_packages }}"
+    state: present
+  when:
+    - ansible_distribution_major_version == "2023"

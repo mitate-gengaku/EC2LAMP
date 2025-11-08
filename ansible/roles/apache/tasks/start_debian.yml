@@ -1,0 +1,8 @@
+- name: Apacheを有効化し起動 (Ubuntu 22.04 LTS)
+  systemd:
+    name: apache2
+    enabled: yes
+    daemon_reload: yes
+    state: started
+  when:
+    - ansible_distribution_major_version == "22"

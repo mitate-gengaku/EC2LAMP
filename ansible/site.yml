@@ -1,5 +1,5 @@
 - name: LAMPサーバーの構築
-  hosts: all
+  hosts: amazon
   become: yes
 
   roles:

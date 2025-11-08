@@ -1,0 +1,4 @@
+php_packages:
+  - php 
+  - php-fpm 
+  - php-mysqli

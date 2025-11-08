@@ -2,9 +2,9 @@
 ## Ubuntu
 #############################################
 
-- name: PHPのインストール
+- name: httpd.confの編集
   import_tasks:
-    file: "install_debian.yml"
+    file: "edit_debian.yml"
   when:
     - ansible_distribution in ["Ubuntu"]
 
@@ -12,8 +12,8 @@
 ## Amazon Linux
 #############################################
 
-- name: PHPのインストール
+- name: httpd.confの編集
   import_tasks:
-    file: "install_amazon.yml"
+    file: "edit_amazon.yml"
   when:
     - ansible_distribution in ["Amazon"]
