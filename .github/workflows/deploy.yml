@@ -80,7 +80,9 @@ jobs:
         
       - name: インベントリファイルの作成
         run:  |
-          sed -i "s/ansible_host=/ansible_host=${{ needs.deploy.outputs.ec2_dns }}/" inventories/prod/inventory.ini
+          echo "[amazon]" > inventory
+          echo "ansible_host=${{ needs.deploy.outputs.ec2_dns }}" >> inventory
+          echo "ansible_python_interpreter=/usr/bin/python3.9" >> inventory
 
       - name: SSHキーの作成
         run: |
@@ -93,5 +95,5 @@ jobs:
           sudo apt install -y ansible
 
       - name: ansibleの実行
-        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/key.pem -u ${{ secrets.REMOTE_USER }}
+        run: ansible-playbook -i inventory site.yml --private-key /tmp/key.pem -u ${{ secrets.REMOTE_USER }}
 
