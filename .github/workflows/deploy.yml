@@ -73,8 +73,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: "ansible"
+        working-directory: "./ansible"
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: インベントリファイルの作成
         run:  |
           sed -i "s/ansible_host=/ansible_host=${{ needs.deploy.outputs.ec2_dns }}/" inventories/prod/inventory.ini
