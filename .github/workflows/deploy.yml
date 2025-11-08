@@ -84,15 +84,13 @@ jobs:
 
       - name: SSHキーの作成
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/key.pem
-          chmod 600 ~ /.ssh/key.pem
-          ssh-keyscan -H ${{ needs.deploy.outputs.ec2_dns }} >> ~/.ssh/known_hosts
-          echo "Host *\n IdentityFile ~/.ssh/key.pem" > ~/.ssh/config
+          sudo apt-get install -y rsync
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/key.pem
+          chmod 400 /tmp/sshkey
 
       - name: ansibleのインストール
         run: |
           sudo apt install -y ansible
 
       - name: ansibleの実行
-        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key ~/.ssh/key.pem -u ${{ secrets.REMOTE_USER }}
+        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/key.pem -u ${{ secrets.REMOTE_USER }}
