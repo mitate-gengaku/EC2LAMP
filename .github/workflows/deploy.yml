@@ -23,6 +23,10 @@ jobs:
       run:
         working-directory: "./terraform/prod"
 
+    outputs:
+      ec2_dns: ${{ steps.output.outputs.public_dns }}
+      ec2_ip: ${{ steps.output.outputs.public_ip }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
