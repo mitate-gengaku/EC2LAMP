@@ -3,6 +3,8 @@
 #############################################
 
 - name: Apacheを有効化し起動
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "start_debian.yml"
   when:
@@ -13,6 +15,8 @@
 #############################################
 
 - name: Apacheを有効化し起動
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "start_amazon.yml"
   when:
