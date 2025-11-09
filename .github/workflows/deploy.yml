@@ -91,12 +91,12 @@ jobs:
       - name: SSHキーの作成
         run: |
           sudo apt-get install -y rsync
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/key.pem
-          chmod 400 /tmp/key.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/ec2-key.pem
+          chmod 400 /tmp/ec2-key.pem
 
       - name: ansibleのインストール
         run: |
           sudo apt install -y ansible
 
       - name: ansibleの実行
-        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/key.pem -u ${{ secrets.REMOTE_USER }}
+        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/ec2-key.pem -u ${{ secrets.REMOTE_USER }}
