@@ -3,6 +3,8 @@
 #############################################
 
 - name: データベースとユーザーの作成
+  become: yes
+  become_method: sudo
   import_tasks:
     file: create_debian.yml
   when:
@@ -14,6 +16,8 @@
 #############################################
 
 - name: データベースとユーザーの作成
+  become: yes
+  become_method: sudo
   import_tasks:
     file: create_amazon.yml
   when:
