@@ -87,6 +87,8 @@ jobs:
         run:  |
           echo "[amazon]" > inventory
           echo "amazon ansible_host=${{ needs.deploy.outputs.ec2_ip }} ansible_python_interpreter=/usr/bin/python3.9" >> inventory
+          echo "[amazon:vars]" >> inventory
+          echo "ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
 
       - name: SSHキーの作成
         run: |
