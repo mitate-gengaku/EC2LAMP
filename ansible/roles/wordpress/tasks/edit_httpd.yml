@@ -3,6 +3,8 @@
 #############################################
 
 - name: httpd.confの編集
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "edit_debian.yml"
   when:
@@ -13,6 +15,8 @@
 #############################################
 
 - name: httpd.confの編集
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "edit_amazon.yml"
   when:
