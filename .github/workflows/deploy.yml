@@ -1,10 +1,11 @@
 name: "AWS Deploy"
 
 on:
-  pull_request: 
-    branches: 
-      - main
-    types: closed
+  push
+  # pull_request: 
+  #   branches: 
+  #     - main
+  #   types: closed
 
 env:
   AWS_REGION : "ap-northeast-1"
@@ -17,7 +18,7 @@ permissions:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -73,7 +74,7 @@ jobs:
 
   ansible:
     needs: deploy
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -84,8 +85,8 @@ jobs:
         
       - name: インベントリファイルの作成
         run:  |
-          echo "[amazon]" > inventories/prod/inventory.ini
-          echo "amazon ansible_host=${{ needs.deploy.outputs.ec2_ip }} ansible_python_interpreter=/usr/bin/python3.9" >> inventories/prod/inventory.ini
+          echo "[amazon]" > inventory
+          echo "amazon ansible_host=${{ needs.deploy.outputs.ec2_ip }} ansible_python_interpreter=/usr/bin/python3.9" >> inventory
 
       - name: SSHキーの作成
         run: |
@@ -98,4 +99,4 @@ jobs:
           sudo apt install -y ansible
 
       - name: ansibleの実行
-        run: ansible-playbook -i inventories/prod/inventory.ini site.yml --private-key /tmp/ec2-key.pem -u ${{ secrets.REMOTE_USER }}
+        run: ansible-playbook -i inventory site.yml --private-key /tmp/ec2-key.pem -u ${{ secrets.REMOTE_USER }}
