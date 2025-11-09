@@ -85,8 +85,7 @@ jobs:
       - name: インベントリファイルの作成
         run:  |
           echo "[amazon]" > inventories/prod/inventory.ini
-          echo "amazon ansible_host=${{ needs.deploy.outputs.ec2_dns }}" >> inventories/prod/inventory.ini
-          echo "ansible_python_interpreter=/usr/bin/python3.9" >> inventories/prod/inventory.ini
+          echo "amazon ansible_host=${{ needs.deploy.outputs.ec2_ip }} ansible_python_interpreter=/usr/bin/python3.9" >> inventories/prod/inventory.ini
 
       - name: SSHキーの作成
         run: |
