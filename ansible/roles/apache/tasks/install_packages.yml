@@ -3,6 +3,8 @@
 #############################################
 
 - name: Apacheのインストール
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "install_debian.yml"
   when:
@@ -13,6 +15,8 @@
 #############################################
 
 - name: Apacheのインストール
+  become: yes
+  become_method: sudo
   import_tasks:
     file: "install_amazon.yml"
   when:
